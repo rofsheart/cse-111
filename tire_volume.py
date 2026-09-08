@@ -26,7 +26,7 @@ def main():
     # Print the result with 2 decimal places
     print(f"The approximate volume is {volume:.2f} liters")
     
-    # Open and append to volumes.txt file
+    # Open the volumes.txt file for appending
     with open("volumes.txt", "a") as file:
         # Print all required values to the file
         file.write(f"{formatted_date}, {width:.0f}, {aspect:.0f}, {diameter:.0f}, {volume:.2f}\n")
