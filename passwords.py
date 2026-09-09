@@ -1,5 +1,5 @@
 """
-PASSWORD STRENGTH CHECKER
+PASSWORD STRENGTH CHECKER PROGRAM OUTLINE
 
 A tool to help employees create stronger passwords by checking:
 - Against dictionary words (70,000+ words)
@@ -45,46 +45,6 @@ PURPLE = '\033[95m'
 CYAN = '\033[96m'
 BOLD = '\033[1m'
 END = '\033[0m'
-
-"""
-PASSWORD STRENGTH CHECKER - PROGRAM OUTLINE
-------------------------------------------
-A tool to help employees create stronger passwords by checking:
-- Against dictionary words (70,000+ words)
-- Against common passwords (top 1 million)
-- Length requirements
-- Character complexity (uppercase, lowercase, digits, special chars)
-
-ENHANCEMENT:
-Added colored console output for better visual feedback
-
-Author: Student
-Date: 2024
-"""
-
-# CONSTANTS - Character type definitions
-LOWER = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
-         "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-
-UPPER = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", 
-         "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-
-DIGITS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-
-SPECIAL = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "=", 
-           "+", "[", "]", "{", "}", "|", ";", ":", "'", "\"", ",", ".", "<", 
-           ">", "?", "/", "\\", "`", "~"]
-
-# Color codes for terminal output
-RED = '\033[91m'
-YELLOW = '\033[93m'
-GREEN = '\033[92m'
-BLUE = '\033[94m'
-PURPLE = '\033[95m'
-CYAN = '\033[96m'
-BOLD = '\033[1m'
-END = '\033[0m'
-
 
 
 # FUNCTION 1: word_in_file
