@@ -89,9 +89,8 @@ BOLD = '\033[1m'
 END = '\033[0m'
 
 
-# ============================================
+
 # FUNCTION 1: word_in_file
-# ============================================
 
 def word_in_file(word, filename, case_sensitive=False):
     """
@@ -115,9 +114,8 @@ def word_in_file(word, filename, case_sensitive=False):
     pass
 
 
-# ============================================
+
 # FUNCTION 2: word_has_character
-# ============================================
 
 def word_has_character(word, character_list):
     """
@@ -138,9 +136,8 @@ def word_has_character(word, character_list):
     pass
 
 
-# ============================================
+
 # FUNCTION 3: word_complexity
-# ============================================
 
 def word_complexity(word):
     """
@@ -161,9 +158,7 @@ def word_complexity(word):
     pass
 
 
-# ============================================
 # FUNCTION 4: password_strength
-# ============================================
 
 def password_strength(password, min_length=10, strong_length=16):
     """
@@ -196,9 +191,8 @@ def password_strength(password, min_length=10, strong_length=16):
     pass
 
 
-# ============================================
+
 # FUNCTION 5: draw_strength_bar (ENHANCEMENT)
-# ============================================
 
 def draw_strength_bar(strength):
     """
@@ -219,9 +213,8 @@ def draw_strength_bar(strength):
     pass
 
 
-# ============================================
+
 # FUNCTION 6: main
-# ============================================
 
 def main():
     """
@@ -248,6 +241,8 @@ if __name__ == "__main__":
     main()
 
 """The above code provides a structured outline for a password strength checker tool. Each function has been defined with its purpose, parameters, and expected return values. The main function serves as the entry point for the program, guiding the user through the password testing process. The code includes enhancements for colored console output to improve user experience and feedback."""
+
+
 
 # FUNCTION 1: word_in_file
 
