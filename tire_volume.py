@@ -30,7 +30,7 @@ def main():
     with open("volumes.txt", "a") as file:
         # Print all required values to the file
         file.write(f"{formatted_date}, {width:.0f}, {aspect:.0f}, {diameter:.0f}, {volume:.2f}\n")
-    
+
     # Extra creativity: Tell the user where the data was saved
     print(f"Tire information saved to volumes.txt")
 
