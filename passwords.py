@@ -357,6 +357,4 @@ def main():
 # PROGRAM ENTRY POINT
 
 if __name__ == "__main__":
-    # This code only runs if this file is executed directly
-    # (not imported as a module)
     main()
