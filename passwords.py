@@ -31,49 +31,24 @@ SPECIAL = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "=",
 # FUNCTION 1: word_in_file
 
 def word_in_file(word, filename, case_sensitive=False):
-    """
-    Check if a word exists in a file.
-    
-    Parameters:
-        word (str): The word to search for
-        filename (str): Name of the file to search in
-        case_sensitive (bool): If True, case-sensitive match; if False, case-insensitive
-    
-    Returns:
-        bool: True if word is found, False otherwise
-    """
-    
+    target = word if case_sensitive else word.casefold()
+
     try:
-        # Open the file with UTF-8 encoding
         with open(filename, "r", encoding="utf-8") as file:
-            # Read each line in the file
             for line in file:
-                # Remove newline character and any extra whitespace
                 file_word = line.strip()
-                
-                # Compare based on case sensitivity
-                if case_sensitive:
-                    # Exact match required
-                    if word == file_word:
-                        return True
-                else:
-                    # Case-insensitive match (convert both to lowercase)
-                    if word.lower() == file_word.lower():
-                        return True
-        
-        # Word not found in file
+                if not case_sensitive:
+                    file_word = file_word.casefold()
+                if file_word == target:
+                    return True
         return False
-        
     except FileNotFoundError:
-        # Handle missing file
         print(f"Error: File '{filename}' not found.")
         return False
     except Exception as e:
-        # Handle other errors
         print(f"Error reading file '{filename}': {e}")
         return False
-
-
+    
 # FUNCTION 2: word_has_character
 
 def word_has_character(word, character_list):
