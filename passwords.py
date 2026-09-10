@@ -42,6 +42,7 @@ def word_in_file(word, filename, case_sensitive=False):
     Returns:
         bool: True if word is found, False otherwise
     """
+    
     try:
         # Open the file with UTF-8 encoding
         with open(filename, "r", encoding="utf-8") as file:
