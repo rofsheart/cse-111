@@ -8,7 +8,7 @@ A tool to help employees create stronger passwords by checking:
 - Character complexity (uppercase, lowercase, digits, special chars)
 
 Author: Hearton Rofem Edu
-Date: 09-09-2026
+Date: 09-11-2026
 
 CREATIVE ADDITION (Rubric #11):
     In addition to Sven's required functions, main() displays an optional
