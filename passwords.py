@@ -154,7 +154,7 @@ def main():
     reports its strength, and quits when the user enters 'q' or 'Q'.
     """
     # CREATIVE ADDITION (documented above)
-    # Optional visual bar / emoji feedback in the UI layer only.
+     # Optional visual bar / emoji feedback in the UI layer only.
     def _visual_bar(strength):
         filled = "\u2588" * strength
         empty = "\u2591" * (5 - strength)
@@ -164,7 +164,6 @@ def main():
         return {0: "\U0001F534", 1: "\U0001F534", 2: "\U0001F7E1",
                 3: "\U0001F7E1", 4: "\U0001F7E2", 5: "\U0001F7E2"}[strength]
     #
-
     print("Password Strength Checker")
     print("Type 'q' or 'Q' at any time to quit.")
 
