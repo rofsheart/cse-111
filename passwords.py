@@ -10,11 +10,10 @@ A tool to help employees create stronger passwords by checking:
 Author: Hearton Rofem Edu
 Date: 09-11-2026
 
-CREATIVE ADDITION (Rubric #11):
+MY CREATIVE ADDITION:
     In addition to Sven's required functions, main() displays an optional
-    visual strength bar and an emoji indicator for each result. This is my
-    own addition and is not part of the required specification. It has no
-    effect on the required return values or required messages.
+    visual strength bar and an emoji indicator for each result . This is my
+    own addition. 
 """
 
 
