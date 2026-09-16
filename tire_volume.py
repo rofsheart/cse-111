@@ -16,6 +16,11 @@ def main():
 
     print(f"The approximate volume is {volume:.2f} liters")
 
+    # Get the current date and time
+    current_date_and_time = datetime.now()
+    with open("volumes.txt", "a") as file:
+        file.write(f"{current_date_and_time:%Y-%m-%d}, {int(width)}, {int(aspect)}, {int(diameter)}, {volume:.2f}\n")
+
 #current_date = # Import the datetime class from the datetime
 # module so that it can be used in this program.
 from datetime import datetime
@@ -39,6 +44,8 @@ def compute_tire_volume(width, aspect, diameter):
     volume_of_tire = (math.pi * width**2 * aspect * (width * aspect + 2540 * diameter)) / 10000000000
     return volume_of_tire
 
+if __name__ == "__main__":
+    main()
 
 
 
