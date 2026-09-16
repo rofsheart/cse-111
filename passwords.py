@@ -39,31 +39,31 @@ def word_in_file(word, filename, case_sensitive=False):
     Returns:
         bool: True if the word is found, False otherwise.
     """
-     try:
-            # Sven's Tip #2: include encoding="utf-8"
-            with open(filename, "r", encoding="utf-8") as file:
-                # Read each line in the file
-                for line in file:
-                    # Sven's Tip #3: use strip() to remove the newline
-                    file_word = line.strip()
-    
-                    # Compare based on case sensitivity
-                    if case_sensitive:
-                        if word == file_word:
-                            return True
-                    else:
-                        if word.lower() == file_word.lower():
-                            return True
-    
-            # Not found
-            return False
-    
-        except FileNotFoundError:
-            print(f"Error: File '{filename}' not found.")
-            return False
-        except Exception as e:
-            print(f"Error reading file '{filename}': {e}")
-            return False
+    try:
+        # Sven's Tip #2: include encoding="utf-8"
+        with open(filename, "r", encoding="utf-8") as file:
+            # Read each line in the file
+            for line in file:
+                # Sven's Tip #3: use strip() to remove the newline
+                file_word = line.strip()
+
+                # Compare based on case sensitivity
+                if case_sensitive:
+                    if word == file_word:
+                        return True
+                else:
+                    if word.lower() == file_word.lower():
+                        return True
+
+        # Not found
+        return False
+
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found.")
+        return False
+    except Exception as e:
+        print(f"Error reading file '{filename}': {e}")
+        return False
 
 # FUNCTION 2: word_has_character
 
@@ -79,7 +79,7 @@ def word_has_character(word, character_list):
         bool: True if any character from the list is in the word,
               False otherwise.
     """
-      for char in word:
+    for char in word:
         if char in character_list:
             return True
     return False
@@ -129,7 +129,7 @@ def password_strength(password, min_length=10, strong_length=16):
     Returns:
         int: Strength score from 0 to 5.
     """
-     # Check dictionary (case insensitive)
+    # Check dictionary (case insensitive)
     if word_in_file(password, "wordlist.txt", case_sensitive=False):
         print("Password is a dictionary word and is not secure.")
         return 0
