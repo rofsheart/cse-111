@@ -38,7 +38,7 @@ def word_in_file(word, filename, case_sensitive=False):
         bool: True if the word is found, False otherwise.
     """
     try:
-        # Sven's Tip #2: include encoding="utf-8"
+        # Sven's Tip #2: Open the file using UTF-8 encoding
         with open(filename, "r", encoding="utf-8") as file:
             # Read each line in the file
             for line in file:
@@ -141,7 +141,7 @@ def password_strength(password, min_length=10, strong_length=16):
 
     # Check if very long
     if len(password) > strong_length:
-        print("Password is long, length trumps complexity this is a good password.")
+        print("Password is long enough to receive the maximum strength score.")
         return 5
     
     # Otherwise, use complexity
