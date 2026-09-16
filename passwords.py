@@ -9,8 +9,6 @@ A tool to help employees create stronger passwords by checking:
 """
 
 # import the Character types  
-from fileinput import filename
-
 
 LOWER = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
          "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
@@ -65,7 +63,7 @@ def word_in_file(word, filename, case_sensitive=False):
         print(f"Error reading file '{filename}': {e}")
         return False
 
-# FUNCTION 2: word_has_character
+# FUNCTION 2: Check whether the password contains a character from the list
 
 def word_has_character(word, character_list):
     """
@@ -87,11 +85,8 @@ def word_has_character(word, character_list):
 # FUNCTION 3: word_complexity
 def word_complexity(word):
     """
-    Calculate the complexity score of a word based on character types.
-
-    Uses word_has_character() to check for 4 character types:
-    LOWER, UPPER, DIGITS, SPECIAL. One point is added for each
-    type found in the word.
+    Checks how many different types of characters
+    are present in the password.
 
     Parameters:
         word (str): The word to analyze.
