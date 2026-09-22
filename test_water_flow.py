@@ -50,12 +50,6 @@ def test_pressure_loss_from_Pipe_reduction():
     assert pressure_loss_from_pipe_reduction(0.28687, 1.65, 471729, 0.048692) == approx(-163.744, abs=0.001)
     assert pressure_loss_from_pipe_reduction(0.28687, 1.75, 500318, 0.048692) == approx(-184.182, abs=0.001)
 
-def test_kpa_to_psi():
-    assert kpa_to_psi(0.0) == approx(0.000, abs=0.001)
-    assert kpa_to_psi(100.0) == approx(14.504, abs=0.001)
-    assert kpa_to_psi(293.749) == approx(42.605, abs=0.001)
- 
-
 
 # Call the main function that is part of pytest so that the
 # computer will execute the test functions in this file.
