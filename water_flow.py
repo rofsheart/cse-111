@@ -59,8 +59,7 @@ def pressure_loss_from_pipe_reduction(larger_diameter, fluid_velocity, reynolds_
     k = (0.1 + 50 / reynolds_number) * ((larger_diameter / smaller_diameter) ** 4 - 1)
     return -k * WATER_DENSITY * fluid_velocity ** 2 / 2000
 
-def kpa_to_psi(kpa):
-    return kpa * 0.145038
+
 
 if __name__ == "__main__":
     main()
