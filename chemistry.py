@@ -1,6 +1,6 @@
 from formula import parse_formula
 
-def make_periodic_tabele():
+def make_periodic_table():
   periodic_table_dict = {
   # symbol: [name, atomic_mass]
   "Ac": ["Actinium", 227],
@@ -14,19 +14,19 @@ def make_periodic_tabele():
   "Ba": ["Barium", 137.327],
   "Be": ["Beryllium", 9.012182],
   "Bi": ["Bismuth", 208.9804],
-  "Br": ["Bromine", 9.012182],
-  "c": ["Carbon", 12.0107],
+  "Br": ["Bromine", 79.904],
+  "C": ["Carbon", 12.0107],
   "Ca": ["Calcium", 40.078],
   "Cd": ["Cadmium", 112.411],
   "Ce": ["Cerium", 140.116],
   "Cl": ["Chlorine", 35.453],
-  "Co": ["Cobelt", 58.933195],
+  "Co": ["Cobalt", 58.933195],
   "Cr": ["Chromium", 51.9961],
   "Cs": ["Cesium", 132.9054519],
   "Cu": ["Copper", 63.546],
   "Dy": ["Dysprosium", 162.5],
   "Er": ["Erbrium", 167.259],
-  "Eu": ["Europium", 151,964],
+  "Eu": ["Europium", 151.964],
   "F": ["Fluorine", 18.9984032],
   "Fe": ["Iron", 55.845],
   "Fr": ["Francium", 223],
@@ -101,7 +101,7 @@ def make_periodic_tabele():
     
   return periodic_table_dict
 
-
+# Compute and return the molar mass.
 def compute_molar_mass(symbol_quantity_list, periodic_tabel_dict):
     SYMBOL_INDEX = 0
     QUANTITY_INDEX = 0
@@ -126,17 +126,15 @@ def main():
     formula = input("Chemical formula:")
     # Ask the user for the amount of the compound in grams (sample_mass)
     sample_mass = float(input("Mass in grams:"))
-    periodic_tabel_dict = make_periodic_tabele()
-    symbol_quantity_list = parse_formula
-    # Compute and display the molar mass.
-    molar_mass = parse_formula(formula)
+    periodic_tabel_dict = make_periodic_table()
+    symbol_quantity_list = parse_formula(formula)
     molar_mass = compute_molar_mass(symbol_quantity_list, periodic_tabel_dict)
     # Compute and display the number of moles
     number_of_moles = sample_mass/molar_mass
 
     print()
-    print(f"Molar mass:{molar_mass:.5fgrams/mloe}")
-    print(f"Number of moles:{number_of_moles:.5f}")
+    print(f"Molar mass:{molar_mass:.5f} g/mol")
+    print(f"Number of moles:{number_of_moles:.5f} mol")
 
 
 if __name__ == "__main__":
