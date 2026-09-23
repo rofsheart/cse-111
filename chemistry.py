@@ -102,23 +102,25 @@ def make_periodic_table():
   return periodic_table_dict
 
 # Compute and return the molar mass.
+
 def compute_molar_mass(symbol_quantity_list, periodic_table_dict):
     SYMBOL_INDEX = 0
-    QUANTITY_INDEX = 1
-    ATOMIC_MASS_INDEX = 1
+    QUANTITY_INDEX = 1      
+    ATOMIC_MASS_INDEX = 1   
 
     molar_mass = 0
 
     for item in symbol_quantity_list:
         symbol = item[SYMBOL_INDEX]
-        quantity = int(item[QUANTITY_INDEX])
+        quantity = int(item[QUANTITY_INDEX]) 
+        
         element_data = periodic_table_dict[symbol]
         atomic_mass = element_data[ATOMIC_MASS_INDEX]
 
         molar_mass += atomic_mass * quantity
 
-        return molar_mass
-    
+  
+    return molar_mass  
 
 def main():
     # Ask the user for a chemical formula.
