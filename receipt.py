@@ -4,7 +4,7 @@ from datetime import datetime
 def read_dictionary(filename, key_column_index):
     """
     Reads a CSV file and returns a dictionary.
-    The key is the value in the column indicated by key_column_index.
+    The key is indicated by key_column_index.
     The value is the entire row as a list.
     """
     dictionary = {}
@@ -20,7 +20,7 @@ def read_dictionary(filename, key_column_index):
 
 def main():
     try:
-        # Read the product catalog into a dictionary
+        # Read product catalog into a dictionary
         products_dict = read_dictionary("products.csv", 0)
 
         # Display the dictionar
