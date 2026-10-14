@@ -6,11 +6,10 @@ import numpy as np
 
 try:
     import matplotlib.pyplot as plt
-except ImportError:
+except ImportError:  # pragma: no cover
     plt = None
 
 
-# ---------- Simulation constants ----------
 WIDTH = 900
 HEIGHT = 800
 POPULATION_SIZE = 350
@@ -19,10 +18,10 @@ INFECTION_RADIUS = 15
 CONTAGIOUS_LENGTH = 200
 ILLNESS_LENGTH = 400
 VACCINATION_RATE = 0.02
-SOCIAL_DISTANCING = 0.03
+SOCIAL_DISTANCING = 0.0          # 0 = off, higher = slower movement
+DEFAULT_MOVEMENT = 1.0
 DEFAULT_TRANSMISSION = 0.05
 DEFAULT_DEATH = 0.05
-recovery_rate = 0.10  # default recovery rate used by tests
 
 SUSCEPTIBLE = "susceptible"
 INFECTED = "infected"
@@ -35,11 +34,11 @@ COLORS = {
     RECOVERED: "green",
     DEAD: "black",
 }
+VACCINATED_COLOR = "gold"
 
 
-# ---------- Core simulation functions (testable) ----------
 def create_person(x=None, y=None):
-    """Return one person dict with random position and velocity."""
+    """Return one person dict with a random position and velocity."""
     if x is None:
         x = random.randint(20, WIDTH - 20)
     if y is None:
@@ -56,12 +55,12 @@ def create_person(x=None, y=None):
 
 
 def create_population(size):
-    """Return a list of `size` new person dicts."""
+    """Return a list of `size` newly created people."""
     return [create_person() for _ in range(size)]
 
 
 def initialize_infected(population, count):
-    """Infect `count` susceptible people. Return number infected."""
+    """Infect up to `count` susceptible, unvaccinated people."""
     infected = 0
     attempts = 0
     max_attempts = len(population) * 10
@@ -76,7 +75,7 @@ def initialize_infected(population, count):
 
 
 def vaccinate_population(population, vaccination_rate):
-    """Give each person a chance to be vaccinated. Return count."""
+    """Give each person a chance to be vaccinated; return the count."""
     count = 0
     for person in population:
         if random.random() < vaccination_rate:
@@ -86,29 +85,44 @@ def vaccinate_population(population, vaccination_rate):
 
 
 def count_status(population, status):
-    """Return how many people currently have the given status."""
+    """Return how many people currently have `status`."""
     return sum(1 for p in population if p["status"] == status)
 
 
-def apply_social_distancing(infection_rate, distancing_factor):
-    """Return the effective infection rate after distancing."""
-    return infection_rate * (1 - distancing_factor)
+def apply_social_distancing(movement_rate, social_distance_factor):
+    """Return the effective movement rate after social distancing.
+
+    A factor of 0 means nobody moves; 1 means normal movement.
+    """
+    return movement_rate * (1.0 - social_distance_factor)
 
 
 def distance(p1, p2):
-    """Euclidean distance between two person dicts."""
-    return np.sqrt((p1["x"] - p2["x"]) ** 2 + (p1["y"] - p2["y"]) ** 2)
+    """Euclidean distance between two people."""
+    return float(np.hypot(p1["x"] - p2["x"], p1["y"] - p2["y"]))
 
 
 def spread_disease(population, infection_rate,
-                   infection_radius=INFECTION_RADIUS):
-    """Infect susceptible people who are close to an infected person."""
-    infected_people = [p for p in population if p["status"] == INFECTED]
-    for infected in infected_people:
-        if infected["days_infected"] > CONTAGIOUS_LENGTH:
+                   infection_radius=INFECTION_RADIUS,
+                   contagious_length=CONTAGIOUS_LENGTH):
+    """Infect susceptibles that are within radius of a contagious person.
+
+    Uses a snapshot of the susceptible list so a person infected during
+    this step cannot immediately re-infect others in the same step.
+    """
+    susceptibles = [
+        p for p in population
+        if p["status"] == SUSCEPTIBLE and not p["vaccinated"]
+    ]
+
+    for infected in population:
+        if infected["status"] != INFECTED:
             continue
-        for person in population:
-            if person["status"] != SUSCEPTIBLE or person["vaccinated"]:
+        if infected["days_infected"] > contagious_length:
+            continue
+
+        for person in susceptibles:
+            if person["status"] != SUSCEPTIBLE:
                 continue
             if distance(infected, person) <= infection_radius:
                 if random.random() < infection_rate:
@@ -116,35 +130,51 @@ def spread_disease(population, infection_rate,
                     person["days_infected"] = 0
 
 
-def update_infected(population, recovery_rate, death_rate):
-    """Advance each infected person by one day; resolve recovery/death."""
+def update_infected(population, death_rate,
+                    illness_length=ILLNESS_LENGTH):
+    """Advance every infected person by one day.
+
+    Once `days_infected >= illness_length`, the person either dies (with
+    probability `death_rate`) or recovers. There is no limbo state.
+    """
     recovered = 0
     dead = 0
     for person in population:
         if person["status"] != INFECTED:
             continue
         person["days_infected"] += 1
-        if person["days_infected"] >= ILLNESS_LENGTH:
+        if person["days_infected"] >= illness_length:
             if random.random() < death_rate:
                 person["status"] = DEAD
                 dead += 1
-            elif random.random() < recovery_rate:
+            else:
                 person["status"] = RECOVERED
                 recovered += 1
     return recovered, dead
 
 
-def move_people(population, movement_rate, social_distance_factor=1.0):
+def move_people(population, movement_rate, social_distance_factor=0.0):
     """Move every living person and bounce them off the walls."""
-    effective = movement_rate * social_distance_factor
+    effective = apply_social_distancing(movement_rate,
+                                        social_distance_factor)
     for person in population:
         if person["status"] == DEAD:
             continue
         person["x"] += person["dx"] * effective
         person["y"] += person["dy"] * effective
-        if person["x"] < 0 or person["x"] > WIDTH:
+
+        if person["x"] < 0:
+            person["x"] = 0
             person["dx"] *= -1
-        if person["y"] < 0 or person["y"] > HEIGHT:
+        elif person["x"] > WIDTH:
+            person["x"] = WIDTH
+            person["dx"] *= -1
+
+        if person["y"] < 0:
+            person["y"] = 0
+            person["dy"] *= -1
+        elif person["y"] > HEIGHT:
+            person["y"] = HEIGHT
             person["dy"] *= -1
 
 
@@ -154,28 +184,26 @@ def build_history():
 
 
 def record_daily_statistics(population, history):
-    """Append today's counts to the history."""
+    """Append today's counts to the history dictionary."""
     history["healthy"].append(count_status(population, SUSCEPTIBLE))
     history["infected"].append(count_status(population, INFECTED))
     history["recovered"].append(count_status(population, RECOVERED))
     history["dead"].append(count_status(population, DEAD))
 
 
-# ---------- GUI ----------
 def draw_population(canvas, population):
+    """Draw every person at their actual (x, y) position."""
     canvas.delete("all")
-    x0, y0 = 10, 10
-    spacing = 15
-    per_row = 30
-    for i, person in enumerate(population):
-        color = COLORS.get(person["status"], "gray")
+    radius = 4
+    for person in population:
         if person["vaccinated"] and person["status"] == SUSCEPTIBLE:
-            color = "gold"
-        row = i // per_row
-        col = i % per_row
-        x1 = col * spacing + x0
-        y1 = row * spacing + y0
-        canvas.create_oval(x1, y1, x1 + 10, y1 + 10,
+            color = VACCINATED_COLOR
+        else:
+            color = COLORS.get(person["status"], "gray")
+
+        x, y = person["x"], person["y"]
+        canvas.create_oval(x - radius, y - radius,
+                           x + radius, y + radius,
                            fill=color, outline="")
 
 
@@ -187,10 +215,12 @@ def main():
         "population": create_population(POPULATION_SIZE),
         "history": build_history(),
         "running": False,
-        "movement_rate": 1.0,
+        "movement_rate": DEFAULT_MOVEMENT,
         "transmission": DEFAULT_TRANSMISSION,
+        "contagious_length": CONTAGIOUS_LENGTH,
+        "illness_length": ILLNESS_LENGTH,
         "death": DEFAULT_DEATH,
-        "social_distance": 1.0,
+        "social_distance": SOCIAL_DISTANCING,
     }
     initialize_infected(state["population"], INITIAL_INFECTED)
     vaccinate_population(state["population"], VACCINATION_RATE)
@@ -201,9 +231,10 @@ def main():
     info_label = tk.Label(root, text="", font=("Arial", 12))
     info_label.pack()
 
-    movement_slider = tk.Scale(root, from_=0.1, to=5.0, resolution=0.1,
+    
+    movement_slider = tk.Scale(root, from_=0.0, to=5.0, resolution=0.1,
                                orient="horizontal", label="Movement Rate")
-    movement_slider.set(1.0)
+    movement_slider.set(DEFAULT_MOVEMENT)
     movement_slider.pack(fill="x")
 
     transmission_slider = tk.Scale(root, from_=0.0, to=1.0, resolution=0.01,
@@ -212,12 +243,31 @@ def main():
     transmission_slider.set(DEFAULT_TRANSMISSION)
     transmission_slider.pack(fill="x")
 
+    contagious_slider = tk.Scale(root, from_=10, to=500, resolution=1,
+                                 orient="horizontal",
+                                 label="Length of Contagiousness (days)")
+    contagious_slider.set(CONTAGIOUS_LENGTH)
+    contagious_slider.pack(fill="x")
+
+    illness_slider = tk.Scale(root, from_=10, to=1000, resolution=1,
+                              orient="horizontal",
+                              label="Length of Illness (days)")
+    illness_slider.set(ILLNESS_LENGTH)
+    illness_slider.pack(fill="x")
+
     death_slider = tk.Scale(root, from_=0.0, to=1.0, resolution=0.01,
                             orient="horizontal",
                             label="Death Probability")
     death_slider.set(DEFAULT_DEATH)
     death_slider.pack(fill="x")
 
+    distancing_slider = tk.Scale(root, from_=0.0, to=1.0, resolution=0.05,
+                                 orient="horizontal",
+                                 label="Social Distancing Factor")
+    distancing_slider.set(SOCIAL_DISTANCING)
+    distancing_slider.pack(fill="x")
+
+   
     button_frame = tk.Frame(root)
     button_frame.pack(pady=10)
 
@@ -234,17 +284,21 @@ def main():
         initialize_infected(state["population"], INITIAL_INFECTED)
         vaccinate_population(state["population"], VACCINATION_RATE)
         draw_population(canvas, state["population"])
+        update_info_label()
 
     def apply_settings():
         state["movement_rate"] = movement_slider.get()
         state["transmission"] = transmission_slider.get()
+        state["contagious_length"] = int(contagious_slider.get())
+        state["illness_length"] = int(illness_slider.get())
         state["death"] = death_slider.get()
+        state["social_distance"] = distancing_slider.get()
 
     def show_graph():
         if plt is None:
             return
         plt.figure(figsize=(10, 6))
-        for key, label in [("healthy", "Healthy"),
+        for key, label in [("healthy", "Susceptible"),
                            ("infected", "Infected"),
                            ("recovered", "Recovered"),
                            ("dead", "Dead")]:
@@ -267,24 +321,32 @@ def main():
     ttk.Button(button_frame, text="Show Graph",
                command=show_graph).pack(side="left", padx=5)
 
+    def update_info_label():
+        info_label.config(
+            text=(f"Healthy: {count_status(state['population'], SUSCEPTIBLE)}  "
+                  f"Infected: {count_status(state['population'], INFECTED)}  "
+                  f"Recovered: {count_status(state['population'], RECOVERED)}  "
+                  f"Dead: {count_status(state['population'], DEAD)}")
+        )
+
     def update():
         if state["running"]:
-            move_people(state["population"], state["movement_rate"],
+            move_people(state["population"],
+                        state["movement_rate"],
                         state["social_distance"])
-            spread_disease(state["population"], state["transmission"])
-            update_infected(state["population"], recovery_rate,
-                            state["death"])
+            spread_disease(state["population"],
+                           state["transmission"],
+                           contagious_length=state["contagious_length"])
+            update_infected(state["population"],
+                            state["death"],
+                            illness_length=state["illness_length"])
             record_daily_statistics(state["population"], state["history"])
             draw_population(canvas, state["population"])
-            info_label.config(
-                text=(f"Healthy: {count_status(state['population'], SUSCEPTIBLE)}  "
-                      f"Infected: {count_status(state['population'], INFECTED)}  "
-                      f"Recovered: {count_status(state['population'], RECOVERED)}  "
-                      f"Dead: {count_status(state['population'], DEAD)}")
-            )
+            update_info_label()
         root.after(30, update)
 
     draw_population(canvas, state["population"])
+    update_info_label()
     update()
     root.mainloop()
 
