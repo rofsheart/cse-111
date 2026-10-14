@@ -1,9 +1,3 @@
-"""Graphical simulation of disease spread.
-
-Core simulation logic is separated from the Tkinter GUI so the logic can be
-imported and tested without a display.
-"""
-
 import random
 import tkinter as tk
 from tkinter import ttk
@@ -16,7 +10,7 @@ except ImportError:  # pragma: no cover
     plt = None
 
 
-# ----------------------------- Constants ---------------------------------
+
 WIDTH = 900
 HEIGHT = 800
 POPULATION_SIZE = 350
@@ -44,7 +38,7 @@ COLORS = {
 VACCINATED_COLOR = "gold"
 
 
-# ----------------------- Core simulation functions -----------------------
+
 def create_person(x=None, y=None):
     """Return one person dict with a random position and velocity."""
     if x is None:
@@ -199,7 +193,7 @@ def record_daily_statistics(population, history):
     history["dead"].append(count_status(population, DEAD))
 
 
-# -------------------------------- GUI ------------------------------------
+
 def draw_population(canvas, population):
     """Draw every person at their actual (x, y) position."""
     canvas.delete("all")
@@ -240,7 +234,7 @@ def main():
     info_label = tk.Label(root, text="", font=("Arial", 12))
     info_label.pack()
 
-    # ----------------------- Sliders -----------------------
+ 
     movement_slider = tk.Scale(root, from_=0.0, to=5.0, resolution=0.1,
                                orient="horizontal", label="Movement Rate")
     movement_slider.set(DEFAULT_MOVEMENT)
@@ -276,7 +270,6 @@ def main():
     distancing_slider.set(SOCIAL_DISTANCING)
     distancing_slider.pack(fill="x")
 
-    # ----------------------- Buttons -----------------------
     button_frame = tk.Frame(root)
     button_frame.pack(pady=10)
 

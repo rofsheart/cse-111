@@ -1,8 +1,3 @@
-"""Pytest tests for the core simulation functions.
-
-Run with:  python -m pytest test_simulation.py -v
-"""
-
 import random
 
 import pytest
