@@ -11,8 +11,6 @@ from disease_simulation import (
     build_history, record_daily_statistics,
 )
 
-
-# ----------------------------- create_person -----------------------------
 def test_create_person_sets_position():
     p = create_person(100, 200)
     assert p["x"] == 100
@@ -33,7 +31,6 @@ def test_create_person_position_in_bounds():
         assert 20 <= p["y"] <= HEIGHT - 20
 
 
-# ---------------------------- create_population --------------------------
 def test_create_population_length():
     pop = create_population(50)
     assert len(pop) == 50
@@ -43,7 +40,6 @@ def test_create_population_empty():
     assert create_population(0) == []
 
 
-# --------------------------- initialize_infected -------------------------
 def test_initialize_infected_sets_count():
     pop = create_population(20)
     n = initialize_infected(pop, 5)
@@ -60,7 +56,6 @@ def test_initialize_infected_skips_vaccinated():
     assert count_status(pop, INFECTED) == 0
 
 
-# --------------------------- vaccinate_population ------------------------
 def test_vaccinate_population_all():
     pop = create_population(10)
     n = vaccinate_population(pop, 1.0)
@@ -75,7 +70,6 @@ def test_vaccinate_population_none():
     assert not any(p["vaccinated"] for p in pop)
 
 
-# ------------------------------ count_status -----------------------------
 def test_count_status():
     pop = create_population(5)
     pop[0]["status"] = INFECTED
@@ -87,7 +81,6 @@ def test_count_status():
     assert count_status(pop, DEAD) == 1
 
 
-# ----------------------- apply_social_distancing -------------------------
 def test_apply_social_distancing_off():
     assert apply_social_distancing(2.0, 0.0) == 2.0
 
@@ -100,7 +93,6 @@ def test_apply_social_distancing_full():
     assert apply_social_distancing(2.0, 1.0) == 0.0
 
 
-# -------------------------------- distance -------------------------------
 def test_distance_pythagorean():
     a = {"x": 0, "y": 0}
     b = {"x": 3, "y": 4}
@@ -112,7 +104,6 @@ def test_distance_same_point():
     assert distance(a, a) == 0.0
 
 
-# ---------------------------- spread_disease -----------------------------
 def test_spread_disease_infects_close_susceptible():
     random.seed(0)
     infected = create_person(100, 100)
@@ -157,7 +148,6 @@ def test_spread_disease_zero_transmission():
     assert healthy["status"] == SUSCEPTIBLE
 
 
-# ---------------------------- update_infected ----------------------------
 def test_update_infected_always_dies():
     p = create_person(0, 0)
     p["status"] = INFECTED
@@ -182,7 +172,6 @@ def test_update_infected_ignores_healthy():
     assert p["days_infected"] == 0
 
 
-# ------------------------------ move_people ------------------------------
 def test_move_people_moves_person():
     p = create_person(100, 100)
     p["dx"] = 1.0
@@ -211,7 +200,6 @@ def test_move_people_dead_stay_still():
     assert p["y"] == 100
 
 
-# ---------------------- history and statistics ---------------------------
 def test_build_history_keys():
     h = build_history()
     assert set(h.keys()) == {"healthy", "infected", "recovered", "dead"}
