@@ -1,6 +1,6 @@
 """Pytest tests for the core simulation functions.
 
-Run with:  pytest test_simulation.py -v
+Run with:  python -m pytest test_simulation.py -v
 """
 
 import random
@@ -167,7 +167,6 @@ def test_update_infected_always_dies():
     p = create_person(0, 0)
     p["status"] = INFECTED
     p["days_infected"] = 0
-    recovered, dead = update_infected([p], death_rate=1.0, illness_length=5)
     for _ in range(5):
         update_infected([p], death_rate=1.0, illness_length=5)
     assert p["status"] == DEAD
